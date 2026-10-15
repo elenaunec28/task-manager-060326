@@ -112,3 +112,9 @@ print(f"Average Number of Tasks: {result['avg_tasks']}")
 ○ Наше собственно созданное поле count_of_tasks
 5. Выведите как результат никнейм разработчика и количество прикреплённых за ним задач."""
 
+from django.db.models import Count
+from django.contrib.auth.models import User
+
+count_of_tasks = User.objects.annotate(count_of_tasks=Count("tasks")).values("username", "count_of_tasks")
+for user in count_of_tasks:
+    print(f"Username: {user['username']}, Count of Tasks: {user['count_of_tasks']}")
