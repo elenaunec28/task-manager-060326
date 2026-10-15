@@ -72,11 +72,43 @@ from core.models import Tag, Project, ProjectFile, Task, Category
 4. Выведите информацию о количестве файлов для каждого проекта.
 """
 
-from django.db.models import Count
+# from django.db.models import Count
+# from core.models import Project
+#
+# projects = Project.objects.all()
+# project_file_counts = {}
+# for project in projects:
+#     file_count = project.files.aggregate(num_files=Count('id'))
+#     project_file_counts[project.title] = file_count['num_files']
+# for project_name, num_files in project_file_counts.items():
+#     print(f"Project: {project_name}, Number of files: {num_files}")
+
+"""Задание 5
+1. Импортируйте модель Project.
+2. Импортируйте класс AVG из django.
+3. Напишите запрос, который сможет для каждого проекта выведите среднее количество задач.
+4. Выведите полученные данные.
+"""
+
+from django.db.models import Avg
 from core.models import Project
 
-project = Project.objects.all()
-project_file_count = {}
+projects = Project.objects.annotate(task_count=Count("tasks"))
 
-for p in project:
-    project_file_count = project.project
+# Number of tasks for each project
+for project in projects:
+    print(f"Project: {project.title}, Tasks: {project.task_count}")
+
+# Average number of tasks across all projects
+result = projects.aggregate(avg_tasks=Avg("task_count"))
+print(f"Average Number of Tasks: {result['avg_tasks']}")
+
+"""Задание 6
+1. Импортируйте модель User из django.
+2. Импортируйте класс Count из django.
+3. Напишите запрос, который получит из базы данных количество задач для каждого пользователя.
+4. В запросе укажите, что хотим работать только с конкретными полями:
+○ Username
+○ Наше собственно созданное поле count_of_tasks
+5. Выведите как результат никнейм разработчика и количество прикреплённых за ним задач."""
+
