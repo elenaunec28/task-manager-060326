@@ -90,18 +90,18 @@ from core.models import Tag, Project, ProjectFile, Task, Category
 4. Выведите полученные данные.
 """
 
-from django.db.models import Avg
-from core.models import Project
-
-projects = Project.objects.annotate(task_count=Count("tasks"))
-
-# Number of tasks for each project
-for project in projects:
-    print(f"Project: {project.title}, Tasks: {project.task_count}")
-
-# Average number of tasks across all projects
-result = projects.aggregate(avg_tasks=Avg("task_count"))
-print(f"Average Number of Tasks: {result['avg_tasks']}")
+# from django.db.models import Avg
+# from core.models import Project
+#
+# projects = Project.objects.annotate(task_count=Count("tasks"))
+#
+# # Number of tasks for each project
+# for project in projects:
+#     print(f"Project: {project.title}, Tasks: {project.task_count}")
+#
+# # Average number of tasks across all projects
+# result = projects.aggregate(avg_tasks=Avg("task_count"))
+# print(f"Average Number of Tasks: {result['avg_tasks']}")
 
 """Задание 6
 1. Импортируйте модель User из django.
@@ -112,9 +112,85 @@ print(f"Average Number of Tasks: {result['avg_tasks']}")
 ○ Наше собственно созданное поле count_of_tasks
 5. Выведите как результат никнейм разработчика и количество прикреплённых за ним задач."""
 
-from django.db.models import Count
-from django.contrib.auth.models import User
+# from django.db.models import Count
+# from django.contrib.auth.models import User
+#
+# count_of_tasks = User.objects.annotate(count_of_tasks=Count("tasks")).values("username", "count_of_tasks")
+# for user in count_of_tasks:
+#     print(f"Username: {user['username']}, Count of Tasks: {user['count_of_tasks']}")
 
-count_of_tasks = User.objects.annotate(count_of_tasks=Count("tasks")).values("username", "count_of_tasks")
-for user in count_of_tasks:
-    print(f"Username: {user['username']}, Count of Tasks: {user['count_of_tasks']}")
+"""Задание 7
+1. Импортируйте модель Task.
+2. Напишите запрос, который сможет отсортировать все задачи по нескольким полям:
+○ Приоритет задачи
+○ Дата к которой задача должна быть выполнена
+3. Выведите название задачи, приоритет и дату завершения.
+"""
+#
+# from core.models import Task
+# tasks = Task.objects.all().order_by("priority", "due_date")
+# for task in tasks:
+#     print(f"Task: {task.title}, Priority: {task.priority}, Due Date: {task.due_date}")
+
+"""Задание 8
+1. Импортируйте модель User из django.
+2. Напишите запрос, который будет сортировать всех пользователей исходя из того,
+как много у каждого задач.
+3. Отсортируйте от самого загруженного сотрудника, к самому свободному по задачам.
+4. Конкретизируйте запрос таким образом, чтобы в него включались только поля:
+○ Username
+○ Count_of_tasks
+5. Выведите все данные в консоль.
+"""
+
+# from django.contrib.auth.models import User
+# from django.db.models import Count
+#
+# count_of_tasks = User.objects.annotate(count_of_tasks=Count("tasks")).values("username", "count_of_tasks").order_by("-count_of_tasks")
+# for user in count_of_tasks:
+#     print(f"Username: {user['username']}, Count of Tasks: {user['count_of_tasks']}")
+
+
+"""Задание 9
+1. Импортируйте модель Task.
+2. Импортируйте класс Paginator.
+3. Напишите запрос для получения всех задач.
+4. Реализуйте пагинацию для того, чтобы в рамках одной страницы отображалось ровно 10 задач,
+не более.
+5. Выведите данные об этих 10-ти задачах:
+○ Название
+○ Статус
+○ Приоритетность
+○ Username разработчика"""
+
+# from django.core.paginator import Paginator
+# from core.models import Task
+#
+# sorted_users = (User.objects.annotate(count_of_tasks=Count("tasks")).values_list("username", "count_of_tasks").order_by("-count_of_tasks"))
+# for username, count_of_tasks in sorted_users:
+#     print(f"Username: {username}, Count of Tasks: {count_of_tasks}")
+
+"""from core.models import Task
+from django.core.paginator import Paginator
+
+task = Task.objects.all()
+paginator = Paginator(task, 10)  # 10 tasks per page
+page_number = 1  # You can change this to get different pages
+page_obj = paginator.get_page(page_number)
+for task in page_obj:
+    print(f"Task: {task.title}, Status: {task.status}, Priority: {task.priority}, Username: {task.assignee}")"""
+
+
+"""Задание 10
+1. Установите модуль djangorestframework.
+2. Добавить этот модуль в файл requirements.txt.
+3. Добавить этот модуль в список установленных приложений в файле settings.py.
+4. Создать новый пакет serializers, в котором создать первый файл - projects
+5. Импортируйте класс ModelSerializer.
+6. Напишите первый сериализатор, который будет обрабатывать поля id и name для проекта,
+выдавая общую базу для вывода всех проектов."""
+
+
+
+
+
