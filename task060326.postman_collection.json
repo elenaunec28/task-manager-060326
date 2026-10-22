@@ -1,0 +1,134 @@
+{
+  "info": {
+    "_postman_id": "15d0ac1c-0d9a-450c-94de-7c13d8220126",
+    "name": "task060326",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52514616",
+    "_collection_link": "https://go.postman.co/collection/52514616-15d0ac1c-0d9a-450c-94de-7c13d8220126?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "get_all_projects",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8001/projects/",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8001",
+          "path": [
+            "projects",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_all_tasks",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update_tag",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"NewName\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8001/tags/01a11af9-eee8-7388-b012-07b11bf57f5e/update/",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8001",
+          "path": [
+            "tags",
+            "01a11af9-eee8-7388-b012-07b11bf57f5e",
+            "update",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get_tag",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8001/tags/01a11af9-eee8-7388-b012-07b11bf57f5e",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8001",
+          "path": [
+            "tags",
+            "01a11af9-eee8-7388-b012-07b11bf57f5e"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create_tag",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8001/tags/create",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8001",
+          "path": [
+            "tags",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
