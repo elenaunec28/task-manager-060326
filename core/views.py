@@ -1,10 +1,10 @@
 from django.http import HttpResponse
-from .serializers import AllProjectsSerializer
+from .serializers import AllProjectsSerializer, TaskSerializer
 from rest_framework.request import Request
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
-from core.models import Project
+from core.models import Project, Task
 
 """Задание 11
 1. Импортируйте ранее написанный сериализатор в файл, где будет реализовываться первое
