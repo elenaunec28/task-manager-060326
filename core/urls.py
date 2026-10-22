@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import hello, get_all_projects
+from .views import hello, get_all_projects, get_all_tasks, get_task_by_project_name
 
 app_name = 'core'
 
@@ -25,5 +25,7 @@ app_name = 'core'
 
 urlpatterns = [
     path('projects/', get_all_projects, name='get_all_projects'),
+    path('tasks/', get_all_tasks, name='get_all_tasks'),
+    path ('tasks/<str:name>/', get_task_by_project_name, name='get_task_by_project_name'),
     path('<str:name>/', hello, name='hello'),
 ]

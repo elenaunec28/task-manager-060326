@@ -1,3 +1,3 @@
-from .projects import AllProjectsSerializer, TaskSerializer
-from .core.serializers.tasks import TaskSerializer
+from .projects import AllProjectsSerializer
+from .tasks import TaskSerializer
 
