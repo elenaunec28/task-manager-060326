@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import hello, get_all_projects, get_all_tasks, get_task_by_project_name, get_all_tags, get_tag_by_id, update_tag
+from .views import hello, get_all_projects, get_all_tasks, get_task_by_project_name, get_all_tags, get_tag_by_id, update_tag, create_tag
 
 app_name = 'core'
 
@@ -30,6 +30,7 @@ urlpatterns = [
     path('tags/', get_all_tags, name='get_all_tags'),
     path('tags/<uuid:tag_id>/', get_tag_by_id, name='get_tag_by_id'),
     path('tags/<uuid:tag_id>/update/', update_tag, name='update_tag'),
+    path('tags/create/', create_tag, name='create_tag'),
 
 
 
