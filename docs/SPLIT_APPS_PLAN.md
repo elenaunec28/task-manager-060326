@@ -60,6 +60,7 @@ task-manager-060326/
 │       ├── urls.py
 │       └── views.py            # tasks + tags endpoints
 ├── config/
+├── docs/                       # PDF с заданиями, Postman-коллекция, этот план
 └── manage.py
 ```
 
@@ -68,7 +69,7 @@ task-manager-060326/
 | Task | core | apps.tasks | task\_manager\_task |
 | SubTask | core | apps.tasks | task\_manager\_subtask |
 | Category | core | apps.tasks | task\_manager\_category |
-| Tag | core | apps.tasks | core\_tag (в шаге 12 можно переименовать в task\_manager\_tag) |
+| Tag | core | apps.tasks | core\_tag, после шага 12 task\_manager\_tag |
 | Project | core | apps.projects | task\_manager\_project |
 | ProjectFile | core | apps.projects | task\_manager\_project\_file |
 | UUIDv7Model, TimeStampedModel | core | apps.core | нет таблиц (abstract) |
@@ -113,10 +114,10 @@ Assumption: `Category` и `Tag` относятся к задачам и идут
    git pull
    git switch -c split-apps
    ```
-3. Резервная копия базы вне проекта, чтобы она не попала в git. Если что-то пойдёт не так, скопируйте её обратно:
+3. Отдельный бэкап базы не нужен. `db.sqlite3` хранится в git (учебный проект, так задумано), и если что-то пойдёт не так, её можно вернуть так:
 
    ```powershell
-   Copy-Item db.sqlite3 ..\db_before_split.sqlite3
+   git restore db.sqlite3
    ```
 4. Все миграции `core` должны быть применены. Новые миграции строятся поверх `core 0003`:
 
@@ -428,7 +429,7 @@ urlpatterns = [
 ]
 ```
 
-Порядок важен. В `core` есть маршрут `<str:name>/`, и он перехватит `/projects/`, `/tasks/` и `/tags/`, если стоит раньше. Префикс `''` оставляет адреса прежними, поэтому Postman-коллекция `task060326.postman_collection.json` продолжает работать.
+Порядок важен. В `core` есть маршрут `<str:name>/`, и он перехватит `/projects/`, `/tasks/` и `/tags/`, если стоит раньше. Префикс `''` оставляет адреса прежними, поэтому Postman-коллекция `docs/task060326.postman_collection.json` продолжает работать.
 
 ### Шаг 9. Admin и orm-скрипты
 
@@ -658,19 +659,17 @@ for g in Group.objects.all():
 
 У вас числа могут отличаться. Сравнивайте с тем, что было в вашей базе до переноса. В списке прав групп не должно остаться `core`.
 
-Коммит. В него должны попасть новые файлы и три миграции. Перед коммитом проверьте `git status`: там не должно быть файлов `__pycache__` и бэкапа базы.
+Коммит. В него должны попасть новые файлы, три миграции и мигрированная `db.sqlite3`: база хранится в репозитории умышленно, и в каждой ветке остаётся своя её версия. Перед коммитом проверьте `git status`: там не должно быть файлов `__pycache__`.
 
 ```powershell
-git add apps config orm1.py orm4.py
+git add apps config orm1.py orm4.py db.sqlite3
 git status
 git commit -m "Split core models into apps.tasks and apps.projects"
 ```
 
-`db.sqlite3` лежит в git. Если команда договорилась не коммитить личные базы, не добавляйте его в этот коммит.
+## Шаг 12. Переименовать таблицу тегов
 
-## Шаг 12 (по желанию). Переименовать таблицу тегов
-
-Шаг нужен, если хочется, чтобы все таблицы назывались `task_manager_*`. В отличие от шага 10, здесь меняется сама база, поэтому делаем это отдельным коммитом после шага 11.
+Приводим все таблицы к виду `task_manager_*`. В отличие от шага 10, здесь меняется сама база, поэтому это отдельный коммит после шага 11, вместе с обновлённой `db.sqlite3`.
 
 1. **Файл `apps/tasks/models/tag.py`**: в `Meta` заменить `db_table = "core_tag"` на `db_table = "task_manager_tag"`.
 2. Создать и применить миграцию. Здесь оборачивать ничего не нужно:
@@ -690,17 +689,16 @@ git commit -m "Split core models into apps.tasks and apps.projects"
 
 ## Для остальных участников команды
 
-Миграции создаёт один человек (шаги 0–11). Остальные их не генерируют, а применяют к своей базе. У каждого своя база со своими данными, и миграции работают для любой базы, где применена `core 0003`.
+Миграции создаёт один человек (шаги 0–12). Остальные их не генерируют. В `main` вместе с миграциями лежит уже мигрированная `db.sqlite3`, поэтому с базой из `main` `migrate` просто ответит `No migrations to apply`. Если вы работаете со своей базой из другой ветки, миграции применяются к ней: они работают для любой базы, где применена `core 0003`.
 
 1. До слияния ветки не менять модели и не создавать новые миграции в `core`. Иначе появятся две разные `0004` и конфликт миграций.
 2. После слияния закоммитить или убрать в stash свои незаконченные правки и забрать изменения:
 
    ```powershell
-   git switch master
+   git switch main
    git pull
    ```
-3. Сделать резервную копию своей базы: `Copy-Item db.sqlite3 ..\db_before_split.sqlite3`.
-4. Применить миграции. `makemigrations` не запускать, все миграции уже в репозитории:
+3. Применить миграции. `makemigrations` не запускать, все миграции уже в репозитории:
 
    ```powershell
    python manage.py migrate
@@ -708,11 +706,11 @@ git commit -m "Split core models into apps.tasks and apps.projects"
    ```
 
    Вторая команда должна написать `No changes detected`.
-5. Поправить импорты в своей рабочей ветке. Везде, где есть `from core.models import ...`, нужен импорт из нового места:
+4. Поправить импорты в своей рабочей ветке. Везде, где есть `from core.models import ...`, нужен импорт из нового места:
    - `Task`, `SubTask`, `Category`, `Tag` → `from apps.tasks.models import ...`
    - `Project`, `ProjectFile` → `from apps.projects.models import ...`
    - `UUIDv7Model`, `TimeStampedModel` → `from apps.core.models.base import ...`
-6. Если `migrate` упал, верните базу из резервной копии и пришлите вывод тому, кто делал перенос.
+5. Если `migrate` упал, верните базу командой `git restore db.sqlite3` и пришлите вывод тому, кто делал перенос.
 
 ## Что найдено, но не входит в этот план
 
@@ -720,8 +718,7 @@ git commit -m "Split core models into apps.tasks and apps.projects"
 
 | Проблема | Где | Что происходит |
 | --- | --- | --- |
-| Тест запрашивает `/hello/Alice/`, а маршрут `<str:name>/` принимает только один сегмент пути | `core/tests.py` | `python manage.py test` → `AssertionError: 404 != 200` |
+| Тест запрашивает `/hello/Alice/`, а маршрут `<str:name>/` принимает только один сегмент пути | `apps/core/tests.py` | `python manage.py test` → `AssertionError: 404 != 200` |
 | `requirements.txt` сохранён в кодировке UTF-16, и в нём нет `djangorestframework` (в `.venv` стоит 3.18.3) | `requirements.txt` | У нового участника после `make install` не будет DRF, и проект не запустится (needs verification: выполнить `make install` в чистой папке) |
 | `replace_spaces_with_underscores` обращается к `obj.title`, а у `Category` и `Tag` поле называется `name` | admin action | Действие на категориях и тегах упадёт с `AttributeError` |
-| Вариант с MySQL (`MYSQL=True` в `.env`) не проверялся | `config/settings.py` | needs verification: прогнать шаги 10–11 на копии MySQL-базы |
-| `db.sqlite3` хранится в git, а база у каждого своя | `.gitignore` | Двоичные конфликты при слиянии веток |
+| Вариант с MySQL (`MYSQL=True` в `.env`) не проверялся | `config/settings.py` | needs verification: прогнать шаги 10–12 на копии MySQL-базы |
