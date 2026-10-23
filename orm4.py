@@ -11,7 +11,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 from django.contrib.auth.models import User
-from core.models import Tag, Project, ProjectFile, Task, Category
+from apps.core.models import Tag, Project, ProjectFile, Task, Category
 
 """Задание 1
 1. Импортируйте модель Project.

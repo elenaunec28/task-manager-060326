@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.models.base import UUIDv7Model
+from apps.core.models.base import UUIDv7Model
 
 
 class Tag(UUIDv7Model):
