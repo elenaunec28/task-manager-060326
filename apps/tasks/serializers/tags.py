@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from apps.core.models import Tag
+from apps.tasks.models import Tag
 
 class TagSerializer(ModelSerializer):
     class Meta:

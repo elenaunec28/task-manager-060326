@@ -20,5 +20,7 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('hello/', include('apps.core.urls')),
-    path('', include('apps.core.urls')),
+    path('', include('apps.projects.urls')),
+    path('', include('apps.tasks.urls')),
+    path('', include('apps.core.urls')),  # catch-all '<str:name>/' must stay last
 ]

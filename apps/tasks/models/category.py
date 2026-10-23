@@ -1,6 +1,6 @@
 from django.db import models
 
-from .base import UUIDv7Model
+from apps.core.models.base import UUIDv7Model
 
 
 class Category(UUIDv7Model):

@@ -1,5 +1,5 @@
 from django.db import models
-from .base import TimeStampedModel, UUIDv7Model
+from apps.core.models.base import TimeStampedModel, UUIDv7Model
 
 
 

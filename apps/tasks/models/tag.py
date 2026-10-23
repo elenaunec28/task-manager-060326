@@ -7,6 +7,7 @@ class Tag(UUIDv7Model):
     name = models.CharField(max_length=50, unique=True)
 
     class Meta:
+        db_table = "core_tag"
         ordering = ["name"]
         verbose_name = "Tag"
         verbose_name_plural = "Tags"

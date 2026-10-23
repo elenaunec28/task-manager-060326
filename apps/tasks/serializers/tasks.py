@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from apps.core.models import Task
+from apps.tasks.models import Task
 
 class TaskSerializer(ModelSerializer):
     class Meta:

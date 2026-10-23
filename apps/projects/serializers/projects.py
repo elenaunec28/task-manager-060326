@@ -9,7 +9,7 @@
 выдавая общую базу для вывода всех проектов.
 """
 from rest_framework.serializers import ModelSerializer
-from apps.core.models import Project
+from apps.projects.models import Project
 
 class AllProjectsSerializer(ModelSerializer):
     class Meta:
